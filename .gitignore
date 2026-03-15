@@ -32,4 +32,4 @@ build/
 *.iml
 *.ipr
 /.env/.env
-/Planung
+/Planung.md

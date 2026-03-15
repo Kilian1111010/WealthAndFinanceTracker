@@ -1,0 +1,280 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2026-03-15-create-user
+      author: Kilian1111010
+      changes:
+        - createTable:
+            tableName: USER
+            columns:
+              - column:
+                  name: ID
+                  type: CHAR(36)
+                  defaultValueComputed: UUID()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: PASSWORD
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2026-03-15-create-category
+      author: Kilian1111010
+      changes:
+        - createTable:
+            tableName: CATEGORY
+            columns:
+              - column:
+                  name: ID
+                  type: CHAR(36)
+                  defaultValueComputed: UUID()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: USER_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: CATEGORY
+            baseColumnNames: USER_ID
+            referencedTableName: USER
+            referencedColumnNames: ID
+            constraintName: FK_CATEGORY_USER
+
+  - changeSet:
+      id: 2026-03-15-create-provider
+      author: Kilian1111010
+      changes:
+        - createTable:
+            tableName: PROVIDER
+            columns:
+              - column:
+                  name: ID
+                  type: CHAR(36)
+                  defaultValueComputed: UUID()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: USER_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: PROVIDER
+            baseColumnNames: USER_ID
+            referencedTableName: USER
+            referencedColumnNames: ID
+            constraintName: FK_PROVIDER_USER
+
+  - changeSet:
+      id: 2026-03-15-create-account-type
+      author: Kilian1111010
+      changes:
+        - createTable:
+            tableName: ACCOUNT_TYPE
+            columns:
+              - column:
+                  name: ID
+                  type: CHAR(36)
+                  defaultValueComputed: UUID()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: USER_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: ACCOUNT_TYPE
+            baseColumnNames: USER_ID
+            referencedTableName: USER
+            referencedColumnNames: ID
+            constraintName: FK_ACCOUNT_TYPE_USER
+
+  - changeSet:
+      id: 2026-03-15-create-account
+      author: Kilian1111010
+      changes:
+        - createTable:
+            tableName: ACCOUNT
+            columns:
+              - column:
+                  name: ID
+                  type: CHAR(36)
+                  defaultValueComputed: UUID()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: USER_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PROVIDER_ID
+                  type: CHAR(36)
+              - column:
+                  name: ACCOUNT_TYPE_ID
+                  type: CHAR(36)
+              - column:
+                  name: BALANCE
+                  type: DECIMAL(15,2)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: ACCOUNT
+            baseColumnNames: USER_ID
+            referencedTableName: USER
+            referencedColumnNames: ID
+            constraintName: FK_ACCOUNT_USER
+        - addForeignKeyConstraint:
+            baseTableName: ACCOUNT
+            baseColumnNames: PROVIDER_ID
+            referencedTableName: PROVIDER
+            referencedColumnNames: ID
+            constraintName: FK_ACCOUNT_PROVIDER
+        - addForeignKeyConstraint:
+            baseTableName: ACCOUNT
+            baseColumnNames: ACCOUNT_TYPE_ID
+            referencedTableName: ACCOUNT_TYPE
+            referencedColumnNames: ID
+            constraintName: FK_ACCOUNT_ACCOUNT_TYPE
+
+  - changeSet:
+      id: 2026-03-15-create-transaction
+      author: Kilian1111010
+      changes:
+        - createTable:
+            tableName: TRANSACTION
+            columns:
+              - column:
+                  name: ID
+                  type: CHAR(36)
+                  defaultValueComputed: UUID()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: USER_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACCOUNT_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CATEGORY_ID
+                  type: CHAR(36)
+              - column:
+                  name: AMOUNT
+                  type: DECIMAL(15,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DATE
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: TRANSACTION
+            baseColumnNames: USER_ID
+            referencedTableName: USER
+            referencedColumnNames: ID
+            constraintName: FK_TRANSACTION_USER
+        - addForeignKeyConstraint:
+            baseTableName: TRANSACTION
+            baseColumnNames: ACCOUNT_ID
+            referencedTableName: ACCOUNT
+            referencedColumnNames: ID
+            constraintName: FK_TRANSACTION_ACCOUNT
+        - addForeignKeyConstraint:
+            baseTableName: TRANSACTION
+            baseColumnNames: CATEGORY_ID
+            referencedTableName: CATEGORY
+            referencedColumnNames: ID
+            constraintName: FK_TRANSACTION_CATEGORY
+
+  - changeSet:
+      id: 2026-03-15-create-transfer
+      author: Kilian1111010
+      changes:
+        - createTable:
+            tableName: TRANSFER
+            columns:
+              - column:
+                  name: ID
+                  type: CHAR(36)
+                  defaultValueComputed: UUID()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: USER_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACCOUNT_SENDING_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACCOUNT_RECEIVING_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: AMOUNT
+                  type: DECIMAL(15,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DATE
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: TRANSFER
+            baseColumnNames: USER_ID
+            referencedTableName: USER
+            referencedColumnNames: ID
+            constraintName: FK_TRANSFER_USER
+        - addForeignKeyConstraint:
+            baseTableName: TRANSFER
+            baseColumnNames: ACCOUNT_SENDING_ID
+            referencedTableName: ACCOUNT
+            referencedColumnNames: ID
+            constraintName: FK_TRANSFER_ACCOUNT_SENDING
+        - addForeignKeyConstraint:
+            baseTableName: TRANSFER
+            baseColumnNames: ACCOUNT_RECEIVING_ID
+            referencedTableName: ACCOUNT
+            referencedColumnNames: ID
+            constraintName: FK_TRANSFER_ACCOUNT_RECEIVING
