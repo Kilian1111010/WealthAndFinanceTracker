@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import kilian1111010.wealthandfinancetracker.domain.accounttype.AccountTypeEntity;
 import kilian1111010.wealthandfinancetracker.domain.provider.ProviderEntity;
 import kilian1111010.wealthandfinancetracker.domain.user.UserEntity;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -15,6 +15,9 @@ import java.util.UUID;
 @Table(name = "ACCOUNT")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AccountEntity {
 
     @Id
