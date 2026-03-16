@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                 );
