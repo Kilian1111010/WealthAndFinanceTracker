@@ -18,10 +18,10 @@
 
     <properties>
         <java.version>21</java.version>
-        <boot.version>4.0.3</boot.version>
+        <boot.version>4.0.6</boot.version>
         <springdoc.version>3.0.2</springdoc.version>
         <mariadb.version>3.5.7</mariadb.version>
-        <lombok.version>1.18.44</lombok.version>
+        <lombok.version>1.18.46</lombok.version>
     </properties>
 
     <dependencies>
