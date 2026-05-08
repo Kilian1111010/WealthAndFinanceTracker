@@ -11,7 +11,7 @@ updates:
     groups:
       Patch:
         update-types: ["patch"]
-        labels: ["Patch"]
       Minor:
         update-types: ["minor"]
-        labels: ["Minor"]
+      Major:
+        update-types: ["major"]
