@@ -4,6 +4,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      semver-minor-days: 3
+      semver-patch-days: 0
+      semver-major-days: 7
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
     open-pull-requests-limit: 10
     rebase-strategy: "auto"
     labels: ["dependencies"]
