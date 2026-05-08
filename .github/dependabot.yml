@@ -4,16 +4,31 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    cooldown:
-      semver-minor-days: 3
-      semver-patch-days: 1
-      semver-major-days: 7
-    groups:
-      minor-and-patch:
-        update-types:
-          - "minor"
-          - "patch"
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-    labels: ["dependencies"]
+    labels: ["Dependabot", "Patch"]
     reviewers: ["kilian1111010"]
+    rebase-strategy: "auto"
+    open-pull-requests-limit: 10
+    groups:
+      Patch:
+        update-types: ["patch"]
+
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["Dependabot", "Minor"]
+    reviewers: ["kilian1111010"]
+    rebase-strategy: "auto"
+    open-pull-requests-limit: 10
+    groups:
+      Minor:
+        update-types: ["minor"]
+
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["Dependabot", "Major"]
+    reviewers: ["kilian1111010"]
+    rebase-strategy: "auto"
+    open-pull-requests-limit: 10
