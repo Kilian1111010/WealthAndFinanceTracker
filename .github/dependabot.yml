@@ -4,31 +4,14 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    labels: ["Dependabot", "Patch"]
+    labels: ["Dependabot"]
     reviewers: ["kilian1111010"]
     rebase-strategy: "auto"
     open-pull-requests-limit: 10
     groups:
       Patch:
         update-types: ["patch"]
-
-  - package-ecosystem: "maven"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels: ["Dependabot", "Minor"]
-    reviewers: ["kilian1111010"]
-    rebase-strategy: "auto"
-    open-pull-requests-limit: 10
-    groups:
+        labels: ["Patch"]
       Minor:
         update-types: ["minor"]
-
-  - package-ecosystem: "maven"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels: ["Dependabot", "Major"]
-    reviewers: ["kilian1111010"]
-    rebase-strategy: "auto"
-    open-pull-requests-limit: 10
+        labels: ["Minor"]
