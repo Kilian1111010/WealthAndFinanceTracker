@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2026-09-29-unique-user-name
+      author: Kilian1111010
+      changes:
+        - addUniqueConstraint:
+            tableName: USER
+            columnNames: NAME
+            constraintName: UQ_USER_NAME

@@ -1,54 +1,52 @@
 package kilian1111010.wealthandfinancetracker.auth;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kilian1111010.wealthandfinancetracker.domain.user.UserEntity;
 import kilian1111010.wealthandfinancetracker.domain.user.UserService;
-import kilian1111010.wealthandfinancetracker.exception.exceptions.AlreadyRegisteredException;
-import kilian1111010.wealthandfinancetracker.exception.exceptions.InvalidCredentialsException;
-import kilian1111010.wealthandfinancetracker.exception.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 class AuthService {
 
     private final UserService userService;
+    private final SecurityContextRepository securityContextRepository;
+    private final SessionAuthenticationStrategy sessionAuthenticationStrategy;
+    private final SecurityContextHolderStrategy securityContextHolderStrategy =
+            SecurityContextHolder.getContextHolderStrategy();
 
-    ResponseEntity<LoginResponse> register(RegisterDto dto, HttpSession session) {
-        try {
-            UserEntity userEntity = this.userService.createUser(dto);
-            createSession(session, userEntity.getId(), userEntity.getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new LoginResponse(userEntity.getId(), userEntity.getUsername(), true));
-        } catch (AlreadyRegisteredException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new LoginResponse(null, null, false));
-        }
+    LoginResponse register(RegisterDto dto, HttpServletRequest request, HttpServletResponse response) {
+        UserEntity userEntity = this.userService.createUser(dto);
+        signIn(userEntity, request, response);
+        return new LoginResponse(userEntity.getId(), userEntity.getUsername());
     }
 
-    ResponseEntity<LoginResponse> login(LoginDto dto, HttpSession session) {
-        try {
-            UserEntity userEntity  = this.userService.authenticate(dto.email(), dto.password());
-            createSession(session, userEntity.getId(), userEntity.getUsername());
-            return ResponseEntity.ok(new LoginResponse(userEntity.getId(), userEntity.getUsername(), true));
-        } catch (UserNotFoundException | InvalidCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginResponse(null, null, false));
-        }
+    LoginResponse login(LoginDto dto, HttpServletRequest request, HttpServletResponse response) {
+        UserEntity userEntity = this.userService.authenticate(dto.username(), dto.password());
+        signIn(userEntity, request, response);
+        return new LoginResponse(userEntity.getId(), userEntity.getUsername());
     }
 
-    ResponseEntity<Boolean> logout(HttpSession session) {
-        session.invalidate();
-        return ResponseEntity.ok(true);
-    }
+    private void signIn(UserEntity userEntity, HttpServletRequest request, HttpServletResponse response) {
+        Authentication authentication =
+                UsernamePasswordAuthenticationToken.authenticated(userEntity.getId(), null, List.of());
 
-    private void createSession(HttpSession session, UUID userId, String userName) {
-        session.setAttribute("userId", userId);
-        session.setAttribute("userName", userName);
+        this.sessionAuthenticationStrategy.onAuthentication(authentication, request, response);
+
+        SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
+        context.setAuthentication(authentication);
+        this.securityContextHolderStrategy.setContext(context);
+        this.securityContextRepository.saveContext(context, request, response);
     }
 }

@@ -6,5 +6,5 @@ public interface UserService {
 
     UserEntity createUser(RegisterDto dto);
 
-    UserEntity authenticate(String email, String password);
+    UserEntity authenticate(String username, String password);
 }
