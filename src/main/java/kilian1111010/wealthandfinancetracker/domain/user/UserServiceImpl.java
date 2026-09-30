@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,6 @@ class UserServiceImpl implements UserService {
         }
 
         UserEntity userEntity = UserEntity.builder()
-                .id(UUID.randomUUID())
                 .password(Objects.requireNonNull(this.passwordEncoder.encode(dto.password())))
                 .username(dto.username())
                 .build();

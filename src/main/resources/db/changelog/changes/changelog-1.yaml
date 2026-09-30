@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2026-03-15-create-user
+      id: 2026-09-30-initial-schema
       author: Kilian1111010
       changes:
         - createTable:
@@ -23,11 +23,9 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
+                    unique: true
+                    uniqueConstraintName: UQ_USER_NAME
 
-  - changeSet:
-      id: 2026-03-15-create-category
-      author: Kilian1111010
-      changes:
         - createTable:
             tableName: CATEGORY
             columns:
@@ -54,10 +52,6 @@ databaseChangeLog:
             referencedColumnNames: ID
             constraintName: FK_CATEGORY_USER
 
-  - changeSet:
-      id: 2026-03-15-create-provider
-      author: Kilian1111010
-      changes:
         - createTable:
             tableName: PROVIDER
             columns:
@@ -77,6 +71,18 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
+              - column:
+                  name: COUNTRY
+                  type: CHAR(2)
+              - column:
+                  name: EXEMPTION_AMOUNT
+                  type: DECIMAL(15,2)
+              - column:
+                  name: WEBSITE
+                  type: VARCHAR(255)
+              - column:
+                  name: LOGO_URL
+                  type: VARCHAR(512)
         - addForeignKeyConstraint:
             baseTableName: PROVIDER
             baseColumnNames: USER_ID
@@ -84,10 +90,6 @@ databaseChangeLog:
             referencedColumnNames: ID
             constraintName: FK_PROVIDER_USER
 
-  - changeSet:
-      id: 2026-03-15-create-account-type
-      author: Kilian1111010
-      changes:
         - createTable:
             tableName: ACCOUNT_TYPE
             columns:
@@ -107,6 +109,17 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
+              - column:
+                  name: ASSET_CLASS
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: INCLUDE_IN_NET_WORTH
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
         - addForeignKeyConstraint:
             baseTableName: ACCOUNT_TYPE
             baseColumnNames: USER_ID
@@ -114,10 +127,6 @@ databaseChangeLog:
             referencedColumnNames: ID
             constraintName: FK_ACCOUNT_TYPE_USER
 
-  - changeSet:
-      id: 2026-03-15-create-account
-      author: Kilian1111010
-      changes:
         - createTable:
             tableName: ACCOUNT
             columns:
@@ -144,8 +153,21 @@ databaseChangeLog:
                   name: ACCOUNT_TYPE_ID
                   type: CHAR(36)
               - column:
+                  name: PARENT_ACCOUNT_ID
+                  type: CHAR(36)
+              - column:
                   name: BALANCE
                   type: DECIMAL(15,2)
+              - column:
+                  name: CURRENCY
+                  type: CHAR(3)
+              - column:
+                  name: DESCRIPTION
+                  type: VARCHAR(1000)
+              - column:
+                  name: ARCHIVED
+                  type: BOOLEAN
+                  defaultValueBoolean: false
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
@@ -166,11 +188,51 @@ databaseChangeLog:
             referencedTableName: ACCOUNT_TYPE
             referencedColumnNames: ID
             constraintName: FK_ACCOUNT_ACCOUNT_TYPE
+        - addForeignKeyConstraint:
+            baseTableName: ACCOUNT
+            baseColumnNames: PARENT_ACCOUNT_ID
+            referencedTableName: ACCOUNT
+            referencedColumnNames: ID
+            constraintName: FK_ACCOUNT_PARENT_ACCOUNT
 
-  - changeSet:
-      id: 2026-03-15-create-transaction
-      author: Kilian1111010
-      changes:
+        - createTable:
+            tableName: HOLDING
+            columns:
+              - column:
+                  name: ID
+                  type: CHAR(36)
+                  defaultValueComputed: UUID()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: ACCOUNT_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SYMBOL
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+              - column:
+                  name: QUANTITY
+                  type: DECIMAL(38,18)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: HOLDING
+            baseColumnNames: ACCOUNT_ID
+            referencedTableName: ACCOUNT
+            referencedColumnNames: ID
+            constraintName: FK_HOLDING_ACCOUNT
+        - addUniqueConstraint:
+            tableName: HOLDING
+            columnNames: ACCOUNT_ID, SYMBOL
+            constraintName: UQ_HOLDING_ACCOUNT_SYMBOL
+
         - createTable:
             tableName: TRANSACTION
             columns:
@@ -180,11 +242,6 @@ databaseChangeLog:
                   defaultValueComputed: UUID()
                   constraints:
                     primaryKey: true
-              - column:
-                  name: USER_ID
-                  type: CHAR(36)
-                  constraints:
-                    nullable: false
               - column:
                   name: ACCOUNT_ID
                   type: CHAR(36)
@@ -200,15 +257,15 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: DATE
-                  type: TIMESTAMP
+                  type: DATETIME
                   constraints:
                     nullable: false
-        - addForeignKeyConstraint:
-            baseTableName: TRANSACTION
-            baseColumnNames: USER_ID
-            referencedTableName: USER
-            referencedColumnNames: ID
-            constraintName: FK_TRANSACTION_USER
+              - column:
+                  name: COUNTERPARTY
+                  type: VARCHAR(255)
+              - column:
+                  name: DESCRIPTION
+                  type: VARCHAR(1000)
         - addForeignKeyConstraint:
             baseTableName: TRANSACTION
             baseColumnNames: ACCOUNT_ID
@@ -222,10 +279,6 @@ databaseChangeLog:
             referencedColumnNames: ID
             constraintName: FK_TRANSACTION_CATEGORY
 
-  - changeSet:
-      id: 2026-03-15-create-transfer
-      author: Kilian1111010
-      changes:
         - createTable:
             tableName: TRANSFER
             columns:
@@ -235,11 +288,6 @@ databaseChangeLog:
                   defaultValueComputed: UUID()
                   constraints:
                     primaryKey: true
-              - column:
-                  name: USER_ID
-                  type: CHAR(36)
-                  constraints:
-                    nullable: false
               - column:
                   name: ACCOUNT_SENDING_ID
                   type: CHAR(36)
@@ -251,21 +299,23 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: AMOUNT
+                  name: SENT_AMOUNT
+                  type: DECIMAL(15,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: RECEIVED_AMOUNT
                   type: DECIMAL(15,2)
                   constraints:
                     nullable: false
               - column:
                   name: DATE
-                  type: TIMESTAMP
+                  type: DATETIME
                   constraints:
                     nullable: false
-        - addForeignKeyConstraint:
-            baseTableName: TRANSFER
-            baseColumnNames: USER_ID
-            referencedTableName: USER
-            referencedColumnNames: ID
-            constraintName: FK_TRANSFER_USER
+              - column:
+                  name: DESCRIPTION
+                  type: VARCHAR(1000)
         - addForeignKeyConstraint:
             baseTableName: TRANSFER
             baseColumnNames: ACCOUNT_SENDING_ID
@@ -278,3 +328,10 @@ databaseChangeLog:
             referencedTableName: ACCOUNT
             referencedColumnNames: ID
             constraintName: FK_TRANSFER_ACCOUNT_RECEIVING
+        - sql:
+            dbms: mariadb,mysql
+            sql: >-
+              ALTER TABLE `TRANSFER`
+              ADD CONSTRAINT `CK_TRANSFER_SENT_AMOUNT_POSITIVE` CHECK (`SENT_AMOUNT` > 0),
+              ADD CONSTRAINT `CK_TRANSFER_RECEIVED_AMOUNT_POSITIVE` CHECK (`RECEIVED_AMOUNT` > 0),
+              ADD CONSTRAINT `CK_TRANSFER_DIFFERENT_ACCOUNTS` CHECK (`ACCOUNT_SENDING_ID` <> `ACCOUNT_RECEIVING_ID`);

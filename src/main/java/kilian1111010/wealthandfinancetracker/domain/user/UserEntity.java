@@ -2,6 +2,8 @@ package kilian1111010.wealthandfinancetracker.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -20,6 +22,7 @@ import java.util.UUID;
 public class UserEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "ID")
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;

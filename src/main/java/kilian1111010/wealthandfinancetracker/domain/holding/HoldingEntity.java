@@ -18,6 +18,7 @@ import java.util.UUID;
 public class HoldingEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "ID")
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;

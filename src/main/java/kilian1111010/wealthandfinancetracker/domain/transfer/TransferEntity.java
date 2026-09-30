@@ -6,9 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.jspecify.annotations.Nullable;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -18,21 +19,28 @@ import java.util.UUID;
 public class TransferEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "ID")
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-    @Column(name = "AMOUNT")
-    private BigDecimal amount;
+    @Column(name = "SENT_AMOUNT")
+    private BigDecimal sentAmount;
+
+    @Column(name = "RECEIVED_AMOUNT")
+    private BigDecimal receivedAmount;
 
     @Column(name = "DATE")
-    private LocalDate date;
+    private LocalDateTime date;
+
+    @Column(name = "DESCRIPTION")
+    private @Nullable String description;
 
     @JoinColumn(name = "ACCOUNT_RECEIVING_ID")
     @ManyToOne(fetch = FetchType.LAZY)
-    private AccountEntity accountReceivingId;
+    private AccountEntity receivingAccount;
 
     @JoinColumn(name = "ACCOUNT_SENDING_ID")
     @ManyToOne(fetch = FetchType.LAZY)
-    private AccountEntity accountSendingId;
+    private AccountEntity sendingAccount;
 }
