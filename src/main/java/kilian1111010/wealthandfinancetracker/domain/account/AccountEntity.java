@@ -7,6 +7,7 @@ import kilian1111010.wealthandfinancetracker.domain.user.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.jspecify.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -29,7 +30,20 @@ public class AccountEntity {
     private String name;
 
     @Column(name = "BALANCE")
-    private BigDecimal balance;
+    private @Nullable BigDecimal balance;
+
+    @Column(name = "CURRENCY")
+    private @Nullable String currency;
+
+    @Column(name = "DESCRIPTION")
+    private @Nullable String description;
+
+    @Column(name = "ARCHIVED")
+    private boolean archived;
+
+    @JoinColumn(name = "PARENT_ACCOUNT_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private @Nullable AccountEntity parentAccount;
 
     @JoinColumn(name = "PROVIDER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,4 +56,8 @@ public class AccountEntity {
     @JoinColumn(name = "USER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;
+
+    public boolean isVirtual() {
+        return this.parentAccount != null;
+    }
 }

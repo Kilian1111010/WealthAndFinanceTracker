@@ -23,6 +23,13 @@ public class AccountTypeEntity {
     @Column(name = "NAME")
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ASSET_CLASS")
+    private AssetClass assetClass;
+
+    @Column(name = "INCLUDE_IN_NET_WORTH")
+    private boolean includeInNetWorth;
+
     @JoinColumn(name = "USER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;
