@@ -2,7 +2,6 @@ package kilian1111010.wealthandfinancetracker.exception;
 
 import kilian1111010.wealthandfinancetracker.exception.exceptions.AlreadyRegisteredException;
 import kilian1111010.wealthandfinancetracker.exception.exceptions.InvalidCredentialsException;
-import kilian1111010.wealthandfinancetracker.exception.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,29 +21,23 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AlreadyRegisteredException.class)
-    public ResponseEntity<Exception> alreadyRegistered(AlreadyRegisteredException e) {
-        Exception error = new Exception(409, e.getMessage(), now());
+    public ResponseEntity<ApiError> alreadyRegistered(AlreadyRegisteredException e) {
+        ApiError error = new ApiError(409, e.getMessage(), now());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Exception> userNotFound(UserNotFoundException e) {
-        Exception error = new Exception(404, e.getMessage(), now());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<Exception> invalidCredentials(InvalidCredentialsException e) {
-        Exception error = new Exception(401, e.getMessage(), now());
+    public ResponseEntity<ApiError> invalidCredentials(InvalidCredentialsException e) {
+        ApiError error = new ApiError(401, e.getMessage(), now());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Exception> invalidInput(MethodArgumentNotValidException e) {
+    public ResponseEntity<ApiError> invalidInput(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        Exception error = new Exception(400, message, now());
+        ApiError error = new ApiError(400, message, now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

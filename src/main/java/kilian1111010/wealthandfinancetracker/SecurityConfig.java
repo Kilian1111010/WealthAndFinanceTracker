@@ -80,9 +80,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()//DEV
-                        .requestMatchers("/swagger-ui.html").permitAll()//DEV
-                        .requestMatchers("/v3/api-docs/**").permitAll()//DEV
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()

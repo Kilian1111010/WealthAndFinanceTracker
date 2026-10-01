@@ -42,6 +42,10 @@ public class AccountEntity {
     @Column(name = "ARCHIVED")
     private boolean archived;
 
+    @Version
+    @Column(name = "VERSION")
+    private long version;
+
     @JoinColumn(name = "PARENT_ACCOUNT_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private @Nullable AccountEntity parentAccount;

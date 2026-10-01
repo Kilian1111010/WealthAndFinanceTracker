@@ -170,6 +170,12 @@ databaseChangeLog:
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
+              - column:
+                  name: VERSION
+                  type: BIGINT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
         - addForeignKeyConstraint:
             baseTableName: ACCOUNT
             baseColumnNames: USER_ID

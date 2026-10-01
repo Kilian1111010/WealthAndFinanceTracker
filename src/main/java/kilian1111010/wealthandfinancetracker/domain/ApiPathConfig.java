@@ -1,4 +1,4 @@
-package kilian1111010.wealthandfinancetracker.domain;  // ← Im domain-Paket
+package kilian1111010.wealthandfinancetracker.domain;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerTypePredicate;
