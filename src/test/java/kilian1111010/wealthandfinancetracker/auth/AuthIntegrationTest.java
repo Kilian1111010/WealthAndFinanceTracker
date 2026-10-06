@@ -64,13 +64,27 @@ class AuthIntegrationTest {
                 .andReturn();
         MockHttpSession session = (MockHttpSession) login.getRequest().getSession(false);
 
+        assert session != null;
         this.mockMvc.perform(get("/api/does-not-exist").session(session))
                 .andExpect(status().isNotFound());
+
+        this.mockMvc.perform(get("/auth/me").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(username));
 
         this.mockMvc.perform(post("/auth/logout").with(csrf()).session(session))
                 .andExpect(status().isNoContent());
 
         this.mockMvc.perform(get("/api/does-not-exist").session(session))
+                .andExpect(status().isUnauthorized());
+
+        this.mockMvc.perform(get("/auth/me").session(session))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void meWithoutLoginIsUnauthorized() throws Exception {
+        this.mockMvc.perform(get("/auth/me"))
                 .andExpect(status().isUnauthorized());
     }
 

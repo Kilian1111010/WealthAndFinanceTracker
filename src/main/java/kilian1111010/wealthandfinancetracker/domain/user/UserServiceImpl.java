@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +49,10 @@ class UserServiceImpl implements UserService {
         }
 
         return userEntity;
+    }
+
+    @Override
+    public Optional<UserEntity> findById(UUID id) {
+        return this.userRepository.findById(id);
     }
 }

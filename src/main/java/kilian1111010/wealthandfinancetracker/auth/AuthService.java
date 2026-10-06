@@ -12,9 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +39,14 @@ class AuthService {
         UserEntity userEntity = this.userService.authenticate(dto.username(), dto.password());
         signIn(userEntity, request, response);
         return new LoginResponse(userEntity.getId(), userEntity.getUsername());
+    }
+
+    Optional<LoginResponse> currentUser(@Nullable UUID userId) {
+        if (userId == null) {
+            return Optional.empty();
+        }
+        return this.userService.findById(userId)
+                .map(userEntity -> new LoginResponse(userEntity.getId(), userEntity.getUsername()));
     }
 
     private void signIn(UserEntity userEntity, HttpServletRequest request, HttpServletResponse response) {

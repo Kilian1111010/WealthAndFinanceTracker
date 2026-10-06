@@ -15,3 +15,18 @@ updates:
         update-types: ["minor"]
       Major:
         update-types: ["major"]
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    labels: ["Dependabot"]
+    reviewers: ["kilian1111010"]
+    rebase-strategy: "auto"
+    open-pull-requests-limit: 10
+    groups:
+      Patch:
+        update-types: ["patch"]
+      Minor:
+        update-types: ["minor"]
+      Major:
+        update-types: ["major"]
