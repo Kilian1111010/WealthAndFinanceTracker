@@ -19,8 +19,8 @@
     <properties>
         <java.version>21</java.version>
         <springdoc.version>3.0.3</springdoc.version>
-        <mariadb.version>3.5.8</mariadb.version>
-        <lombok.version>1.18.46</lombok.version>
+        <mariadb.version>3.5.10</mariadb.version>
+        <lombok.version>1.18.48</lombok.version>
     </properties>
 
     <dependencies>
