@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2026-10-06-account-type-required
+      author: Kilian1111010
+      changes:
+        - addNotNullConstraint:
+            tableName: ACCOUNT
+            columnName: ACCOUNT_TYPE_ID
+            columnDataType: CHAR(36)

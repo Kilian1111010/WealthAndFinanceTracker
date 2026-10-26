@@ -6,5 +6,21 @@ public enum AssetClass {
     INVESTMENT,
     CRYPTO,
     LIABILITY,
-    OTHER
+    OTHER;
+
+    public boolean hasBalance() {
+        return this != INVESTMENT && this != CRYPTO;
+    }
+
+    public boolean holdsPositions() {
+        return this == INVESTMENT || this == CRYPTO;
+    }
+
+    public boolean isBookable() {
+        return this == CASH || this == SAVINGS || this == LIABILITY;
+    }
+
+    public boolean allowsSubAccounts() {
+        return this == CASH || this == SAVINGS;
+    }
 }

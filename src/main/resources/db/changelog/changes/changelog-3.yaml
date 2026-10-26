@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2026-10-06-holding-quotes
+      author: Kilian1111010
+      changes:
+        - dropNotNullConstraint:
+            tableName: HOLDING
+            columnName: SYMBOL
+            columnDataType: VARCHAR(50)
+        - addColumn:
+            tableName: HOLDING
+            columns:
+              - column:
+                  name: MANUAL
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: QUOTE_SOURCE
+                  type: VARCHAR(20)
+              - column:
+                  name: QUOTE_ID
+                  type: VARCHAR(100)
+              - column:
+                  name: MANUAL_VALUE
+                  type: DECIMAL(15,2)
+
+  - changeSet:
+      id: 2026-10-06-create-quote
+      author: Kilian1111010
+      changes:
+        - createTable:
+            tableName: QUOTE
+            columns:
+              - column:
+                  name: QUOTE_KEY
+                  type: VARCHAR(130)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: PRICE
+                  type: DECIMAL(30,10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CURRENCY
+                  type: CHAR(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FETCHED_AT
+                  type: DATETIME
+                  constraints:
+                    nullable: false

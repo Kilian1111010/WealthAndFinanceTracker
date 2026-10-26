@@ -52,7 +52,7 @@ public class AccountEntity {
 
     @JoinColumn(name = "PROVIDER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
-    private ProviderEntity provider;
+    private @Nullable ProviderEntity provider;
 
     @JoinColumn(name = "ACCOUNT_TYPE_ID")
     @ManyToOne(fetch = FetchType.LAZY)
